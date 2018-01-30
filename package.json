@@ -4,7 +4,8 @@
   "description": "Create an EPUB from a list of URLs.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "ssc": "node index.js definitions/slatestarcodex.recent.yml"
   },
   "author": "",
   "license": "MIT",

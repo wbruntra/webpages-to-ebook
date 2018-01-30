@@ -69,3 +69,5 @@ definitions/
 
 # Ignore lock.
 package-lock.json
+
+venv/
