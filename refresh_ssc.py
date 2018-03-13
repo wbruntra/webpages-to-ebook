@@ -47,17 +47,23 @@ def get_links(url):
                 links.append(link)
     return links
 
-url = "http://slatestarcodex.com/archives/?comments=false"
 
-# links = get_links(url)
-# links = ssc_filter(links)
-# #
-# with open('archive.json','w') as f:
-#     f.write(json.dumps(links, indent=2, sort_keys=True))
+def prepare_links(download=False):
+    url = "http://slatestarcodex.com/archives/?comments=false"
+    if download:
+        links = get_links(url)
+        links = ssc_filter(links)
+        #
+        with open('archive.json','w') as f:
+            f.write(json.dumps(links, indent=2, sort_keys=True))
+    else:
+        with open('archive.json') as f:
+            links = json.loads(f.read())
+    return links
 
-with open('archive.json') as f:
-    links = json.loads(f.read())
+links = prepare_links(False)
 #
 with open('definitions/slatestarcodex.recent.yml','w') as f:
-    recent_links = links[:15]
+    recent_links = list(reversed(links[:100]))
+    # print('\n'.join(recent_links))
     f.write(make_yml(recent_links))

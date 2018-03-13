@@ -27,7 +27,7 @@ for (let url of book.content) {
   let url_md5 = md5(url);
   console.log(url_md5 + "\t" + 'processing'+ "\t" + url);
   ensureRawFile(url, url_md5);
-  parseFile(url_md5);
+  parseFile(url_md5, url);
 }
 
 function readDefinitions() {
@@ -48,7 +48,7 @@ function ensureRawFile(url, url_md5) {
   // TODO: Deprecated.
   if (!fs.existsSync('./output/html/' + url_md5 + '.html')) {
     console.log(url_md5 + "\t" + 'downloading');
-    child_process.spawnSync( 'wget', [ '-O', './output/html/' + url_md5 + '.html', '--convert-links', url ] ); 
+    child_process.spawnSync( 'wget', [ '-O', './output/html/' + url_md5 + '.html', '--convert-links', url ] );
     console.log(url_md5 + "\t" + 'downloaded');
   }
   else {
@@ -56,7 +56,7 @@ function ensureRawFile(url, url_md5) {
   }
 }
 
-function parseFile(url_md5) {
+function parseFile(url_md5, url) {
 
   fs.readFile('./output/html/' + url_md5 + '.html', (err, data) => {
     let html = data.toString();
@@ -66,7 +66,7 @@ function parseFile(url_md5) {
       return;
     }
     if (err) {
-      console.log(url_md5 + "\t" + 'read error'); 
+      console.log(url_md5 + "\t" + 'read error');
     }
 
     readability(html, function(err, article, meta) {
@@ -79,6 +79,7 @@ function parseFile(url_md5) {
       let articleCopy = {};
       articleCopy.title = article.title;
       articleCopy.content = article.content;
+      articleCopy.url = url.split('?')[0];
       modify(articleCopy);
       let html_processed = template.render(articleCopy);
       console.log(url_md5 + "\t" + 'extracting content');
@@ -91,7 +92,7 @@ function parseFile(url_md5) {
 function modify(article) {
 
   if (typeof book.modify === 'undefined') {
-    return; 
+    return;
   }
   for (key in book.modify) {
     for (let modify of book.modify[key]) {
@@ -117,7 +118,7 @@ function createEpub() {
   var template = Twig.twig({ data: twig });
   var xml = template.render(book);
   fs.writeFileSync('./output/meta/' + book.shortname + '.xml', xml)
-  
+
   var filepaths = [];
   for (url of book.content) {
     var url_md5 = md5(url);

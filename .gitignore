@@ -71,3 +71,4 @@ definitions/
 package-lock.json
 
 venv/
+archive.json
