@@ -3,6 +3,7 @@ import re
 import codecs
 from bs4 import BeautifulSoup as Soup
 import requests
+import arrow
 
 headers = {
     "User-Agent":
@@ -13,10 +14,10 @@ headers = {
 
 def make_yml(links):
     result = '''shortname: slatestarcodex.recent
-title: SlateStarCodex Recent Posts
+title: SlateStarCodex Recent Posts {}
 author: Scott Alexander
 content:
-'''
+'''.format(arrow.now().format('YYYY-MM-DD'))
     for link in links:
         result = result + '- {}?comments=false\n'.format(link)
     return result
@@ -61,9 +62,9 @@ def prepare_links(download=False):
             links = json.loads(f.read())
     return links
 
-links = prepare_links(False)
+links = prepare_links(download=True)
 #
 with open('definitions/slatestarcodex.recent.yml','w') as f:
-    recent_links = list(reversed(links[:100]))
+    recent_links = list(reversed(links[:40]))
     # print('\n'.join(recent_links))
     f.write(make_yml(recent_links))
