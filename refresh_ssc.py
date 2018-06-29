@@ -7,8 +7,10 @@ from bs4 import BeautifulSoup as Soup
 import requests
 import arrow
 import argparse
+
 parser = argparse.ArgumentParser()
-parser.add_argument("reload")
+parser.add_argument('count')
+parser.add_argument('--dl', required=False)
 args = parser.parse_args()
 
 headers = {
@@ -21,10 +23,10 @@ headers = {
 def make_yml(links):
     todays_date = arrow.now().format('YYYY-MM-DD')
     result = '''shortname: slatestarcodex.recent
-title: SlateStarCodex Recent ({})
+title: SlateStarCodex Recent Posts {}
 author: Scott Alexander
 content:
-'''.format(todays_date)
+'''.format(arrow.now().format('YYYY-MM-DD'))
     for link in links:
         result = result + '- {}?comments=false\n'.format(link)
     return result
@@ -59,21 +61,22 @@ def get_links(url):
 def prepare_links(download=False):
     url = "http://slatestarcodex.com/archives/?comments=false"
     if download:
+        print('Refreshing download')
         links = get_links(url)
         links = ssc_filter(links)
         #
         with open('archive.json','w') as f:
             f.write(json.dumps(links, indent=2, sort_keys=True))
     else:
+        print('Using archive')
         with open('archive.json') as f:
             links = json.loads(f.read())
     return links
 
-download = bool(int(args.reload))
 
-links = prepare_links(download)
+links = prepare_links(download=args.dl)
 #
 with open('definitions/slatestarcodex.recent.yml','w') as f:
-    recent_links = list(reversed(links[:25]))
-    print('\n'.join(recent_links))
+    recent_links = list(reversed(links[:args.count]))
+    # print('\n'.join(recent_links))
     f.write(make_yml(recent_links))
