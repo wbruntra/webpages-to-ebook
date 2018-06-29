@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "refresh": "python3 refresh_ssc.py 1",
     "ssc": "node index.js definitions/slatestarcodex.recent.yml"
   },
   "author": "",

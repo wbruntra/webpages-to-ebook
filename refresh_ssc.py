@@ -1,8 +1,15 @@
+#!/home/william/workspace/node/webpages-to-ebook/venv/bin/python
+
 import json
 import re
 import codecs
 from bs4 import BeautifulSoup as Soup
 import requests
+import arrow
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("reload")
+args = parser.parse_args()
 
 headers = {
     "User-Agent":
@@ -12,11 +19,12 @@ headers = {
     }
 
 def make_yml(links):
+    todays_date = arrow.now().format('YYYY-MM-DD')
     result = '''shortname: slatestarcodex.recent
-title: SlateStarCodex Recent Posts
+title: SlateStarCodex Recent ({})
 author: Scott Alexander
 content:
-'''
+'''.format(todays_date)
     for link in links:
         result = result + '- {}?comments=false\n'.format(link)
     return result
@@ -61,9 +69,11 @@ def prepare_links(download=False):
             links = json.loads(f.read())
     return links
 
-links = prepare_links(False)
+download = bool(int(args.reload))
+
+links = prepare_links(download)
 #
 with open('definitions/slatestarcodex.recent.yml','w') as f:
-    recent_links = list(reversed(links[:100]))
-    # print('\n'.join(recent_links))
+    recent_links = list(reversed(links[:25]))
+    print('\n'.join(recent_links))
     f.write(make_yml(recent_links))
