@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "ssc": "node index.js definitions/slatestarcodex.recent.yml"
+    "ssc": "node index.js definitions/slatestarcodex.recent.yml",
+    "refresh": ". ./venv/bin/activate; python refresh_ssc.py 30 --dl 1"
   },
   "author": "",
   "license": "MIT",
