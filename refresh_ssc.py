@@ -1,5 +1,3 @@
-#!/home/william/workspace/node/webpages-to-ebook/venv/bin/python
-
 import json
 import re
 import codecs
@@ -9,7 +7,7 @@ import arrow
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument('count')
+parser.add_argument('--count', required=False)
 parser.add_argument('--dl', required=False)
 args = parser.parse_args()
 
@@ -73,10 +71,13 @@ def prepare_links(download=False):
             links = json.loads(f.read())
     return links
 
+count = args.count or 30
+dl = args.dl or False
+print(dl)
 
-links = prepare_links(download=args.dl)
+links = prepare_links(download=dl)
 #
 with open('definitions/slatestarcodex.recent.yml','w') as f:
-    recent_links = list(reversed(links[:args.count]))
+    recent_links = list(reversed(links[:count]))
     # print('\n'.join(recent_links))
     f.write(make_yml(recent_links))
