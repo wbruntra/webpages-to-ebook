@@ -21,7 +21,7 @@ headers = {
 def make_yml(links):
     todays_date = arrow.now().format('YYYY-MM-DD')
     result = '''shortname: slatestarcodex.recent
-title: SlateStarCodex Recent Posts {}
+title: SlateStarCodex Recent ({})
 author: Scott Alexander
 content:
 '''.format(arrow.now().format('YYYY-MM-DD'))
@@ -72,12 +72,14 @@ def prepare_links(download=False):
     return links
 
 count = args.count or 30
-dl = args.dl or False
-print(dl)
+count = int(count)
+dl = (args.dl).lower() == 'y'
+print('{} posts'.format(count))
+print('Refresh {}'.format(dl))
 
 links = prepare_links(download=dl)
 #
 with open('definitions/slatestarcodex.recent.yml','w') as f:
     recent_links = list(reversed(links[:count]))
-    # print('\n'.join(recent_links))
+    print('\n'.join(recent_links))
     f.write(make_yml(recent_links))
