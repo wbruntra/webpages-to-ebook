@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "ssc": "node index.js definitions/slatestarcodex.recent.yml",
-    "refresh": "python refresh_ssc.py --count 15 --dl Y"
+    "refresh": "python refresh_ssc.py --count 30 --dl Y"
   },
   "author": "",
   "license": "MIT",

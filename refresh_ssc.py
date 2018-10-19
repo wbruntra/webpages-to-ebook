@@ -71,7 +71,7 @@ def prepare_links(download=False):
             links = json.loads(f.read())
     return links
 
-count = args.count or 30
+count = args.count or 50
 count = int(count)
 dl = (args.dl).lower() == 'y'
 print('{} posts'.format(count))
